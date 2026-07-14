@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse. — Premium Editorial Healthcare & Longevity Insights</title>
+  <meta name="description" content="Discover professional medical research, longevity practices, healthy nutritional guides, and evidence-based mental wellness insights.">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://pulse-health-blog.example.com/">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#E23744',
+              'red-hover': '#FF4F5A',
+              dark: '#1C1C1C',
+              muted: '#6B6B6B',
+              bgLight: '#FAFAFA',
+              borderLight: '#EEEEEE'
+            }
+          },
+          borderRadius: {
+            '3xl': '18px',
+            '2xl': '14px'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Article Schema JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How AI is Revolutionizing Modern Diagnostics & Clinical Care",
+    "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80",
+    "genre": "Medical Technology",
+    "keywords": "AI Healthcare, Diagnostics, Medical Research",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Pulse Health",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://pulse-health-blog.example.com/logo.png"
+      }
+    },
+    "datePublished": "2026-07-12",
+    "author": {
+      "@type": "Person",
+      "name": "Dr. Sarah Jenkins"
+    }
+  }
+  </script>
+</head>
+<body class="bg-white">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
+
+  <!-- Search Dialog (Modern native HTML dialog) -->
+  <dialog id="search-dialog" class="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl shadow-2xl border border-neutral-100 focus:outline-none">
+    <div class="flex items-center justify-between pb-4 border-b border-neutral-100 mb-6">
+      <h3 class="text-xl font-bold text-neutral-900">Search Articles</h3>
+      <button id="close-search-btn" class="text-neutral-400 hover:text-brand-red transition">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="relative mb-6">
+      <input type="text" id="search-input" placeholder="Type key diagnostics, cardiology, wellness..." class="w-full pl-12 pr-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl focus:outline-none focus:border-brand-red transition text-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 absolute left-4 top-4 text-neutral-400">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+      </svg>
+    </div>
+    <div id="search-results-list" class="max-h-60 overflow-y-auto space-y-2 pr-2">
+      <!-- Search results generated in app.js -->
+    </div>
+  </dialog>
+
+  <!-- Header -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-40 glass-header py-5">
+    <div class="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" class="text-2xl md:text-3xl font-extrabold tracking-tight text-neutral-900 flex items-center gap-1 group">
+        Pulse<span class="text-brand-red group-hover:scale-125 transition-transform duration-300">.</span>
+      </a>
+
+      <!-- Right Side Container (Nav Links + Search) -->
+      <div class="flex items-center gap-8">
+        <!-- Navigation Links shifted to Right -->
+        <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-neutral-600">
+          <a href="#" class="text-brand-red hover:text-brand-red-hover transition">Home</a>
+          <a href="#editors-picks" class="hover:text-brand-red transition">Editor's Picks</a>
+          <a href="#latest-articles" class="hover:text-brand-red transition">Articles</a>
+          <a href="#popular" class="hover:text-brand-red transition">Trending</a>
+          <a href="#newsletter" class="hover:text-brand-red transition">Subscribe</a>
+        </nav>
+
+        <!-- Inline Search Textbox -->
+        <div class="relative hidden md:block w-48 lg:w-60">
+          <input type="text" id="header-search-input" placeholder="Search articles..." class="w-full pl-10 pr-4 py-2 bg-neutral-100 hover:bg-neutral-200/50 focus:bg-white border border-transparent focus:border-brand-red/30 rounded-full text-xs transition duration-200 focus:outline-none placeholder:text-neutral-500 text-neutral-800">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 absolute left-3.5 top-2.5 text-neutral-400">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+          </svg>
+        </div>
+
+        <!-- Mobile Search Button -->
+        <button id="search-trigger-btn" class="md:hidden p-2.5 rounded-full hover:bg-neutral-100 text-neutral-600 hover:text-brand-red transition" aria-label="Search posts">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section (Magazine Grid Style) -->
+  <section class="pt-28 pb-4 bg-white">
+    <div class="max-w-7xl mx-auto px-6 md:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 h-auto lg:h-[530px] items-stretch">
+        
+        <!-- Left Column: Large Highlight Card (Full Height) -->
+        <article class="group relative rounded-3xl overflow-hidden shadow-md h-[400px] lg:h-full flex flex-col justify-end">
+          <!-- Background Image -->
+          <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=1000&q=80" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Longevity HIIT">
+          <!-- Gradient Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10"></div>
+          <!-- Content Overlay -->
+          <div class="p-6 md:p-10 relative z-20 flex flex-col justify-end h-full">
+            <span class="inline-block bg-brand-red text-white text-[9px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded mb-3 self-start">Wellness</span>
+            <h2 class="text-white text-xl md:text-2xl lg:text-3xl font-medium group-hover:text-neutral-200 transition leading-snug line-clamp-3">
+              <a href="#" onclick="event.preventDefault();">The Longevity Protocol: High-Intensity Interval Training vs Zone 2 Endurance</a>
+            </h2>
+            <p class="text-neutral-300 text-xs mt-4 flex items-center gap-2">
+              <span class="font-semibold">Michael Sterling</span>
+              <span>•</span>
+              <span>June 18, 2026</span>
+            </p>
+          </div>
+        </article>
+
+        <!-- Right Column: Split layout (Top Horizontal + Bottom 2 Squares) -->
+        <div class="flex flex-col justify-between gap-6 h-[420px] lg:h-full">
+          <!-- Right Top: Horizontal Card -->
+          <article class="group relative rounded-3xl overflow-hidden shadow-md h-[200px] lg:h-[252px] flex flex-col justify-end shrink-0">
+            <!-- Background Image -->
+            <img src="https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?auto=format&fit=crop&w=1000&q=80" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Cardiology valve">
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10"></div>
+            <!-- Content Overlay -->
+            <div class="p-6 md:p-8 relative z-20 flex flex-col justify-end h-full">
+              <span class="inline-block bg-brand-red text-white text-[9px] uppercase tracking-wider font-extrabold px-2.5 py-1 rounded mb-3 self-start">Medicine</span>
+              <h3 class="text-white text-lg md:text-xl font-medium group-hover:text-neutral-200 transition leading-snug line-clamp-2">
+                <a href="#" onclick="event.preventDefault();">Cardiology Breakthroughs: Synthesizing New Valve Tissues</a>
+              </h3>
+              <p class="text-neutral-300 text-xs mt-3 flex items-center gap-2">
+                <span class="font-semibold">Dr. Aaron Patel</span>
+                <span>•</span>
+                <span>June 20, 2026</span>
+              </p>
+            </div>
+          </article>
+
+          <!-- Right Bottom: 2 Side-by-side Square Cards -->
+          <div class="grid grid-cols-2 gap-6 h-[200px] lg:h-[252px]">
+            <!-- Bottom Left Card -->
+            <article class="group relative rounded-3xl overflow-hidden shadow-md h-full flex flex-col justify-end">
+              <!-- Background Image -->
+              <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Gut Health">
+              <!-- Gradient Overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10"></div>
+              <!-- Content Overlay -->
+              <div class="p-4 md:p-6 relative z-20 flex flex-col justify-end h-full">
+                <span class="inline-block bg-brand-red text-white text-[8px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded mb-2.5 self-start">Nutrition</span>
+                <h4 class="text-white text-sm md:text-base font-medium group-hover:text-neutral-200 transition leading-snug line-clamp-3">
+                  <a href="#" onclick="event.preventDefault();">Microbiome Health: How Gut Bacteria Shape Mood</a>
+                </h4>
+              </div>
+            </article>
+
+            <!-- Bottom Right Card -->
+            <article class="group relative rounded-3xl overflow-hidden shadow-md h-full flex flex-col justify-end">
+              <!-- Background Image -->
+              <img src="https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Stress stimulation">
+              <!-- Gradient Overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10"></div>
+              <!-- Content Overlay -->
+              <div class="p-4 md:p-6 relative z-20 flex flex-col justify-end h-full">
+                <span class="inline-block bg-brand-red text-white text-[8px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded mb-2.5 self-start">Wellness</span>
+                <h4 class="text-white text-sm md:text-base font-medium group-hover:text-neutral-200 transition leading-snug line-clamp-3">
+                  <a href="#" onclick="event.preventDefault();">De-escalating Stress: Vagus Nerve Stimulation</a>
+                </h4>
+              </div>
+            </article>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Editor's Picks / Featured Section -->
+  <section id="editors-picks" class="pt-8 pb-20 border-b border-brand-borderLight">
+    <div class="max-w-7xl mx-auto px-6 md:px-8">
+      
+      <!-- Section Header styled to match image exactly (Font weight 600) -->
+      <div class="border-b border-neutral-200 mb-12">
+        <div class="inline-block border-b-2 border-neutral-950 pb-4">
+          <h2 class="text-2xl font-semibold text-neutral-900 tracking-tight">Editor's Picks</h2>
+        </div>
+      </div>
+
+      <!-- Grid layout matching the "Featured for members" layout (1 Large + 2 stacks of smaller columns) -->
+      <div class="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr_1fr] gap-10">
+        
+        <!-- Large Featured Post (Left Column - 1.4fr ratio) -->
+        <article class="group flex flex-col justify-between relative">
+          <div class="zoom-img-container aspect-[16/10] mb-5">
+            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover zoom-img" alt="Diagnostics AI">
+          </div>
+          <div>
+            <!-- Heading font weight: 500 (font-medium) -->
+            <h3 class="text-2xl font-medium text-neutral-900 group-hover:text-brand-red transition mb-3 leading-tight">
+              <a href="#" onclick="event.preventDefault();">How AI is Revolutionizing Modern Diagnostics & Clinical Care</a>
+            </h3>
+            <p class="text-neutral-500 text-sm leading-relaxed mb-4">
+              New machine learning architectures are helping doctors identify pulmonary illnesses and cardiovascular issues years before symptoms manifest.
+            </p>
+          </div>
+          <div class="flex items-center justify-between text-xs text-neutral-500 mt-2 pt-4 border-t border-neutral-100">
+            <div>
+              <span class="font-semibold text-neutral-800">Dr. Sarah Jenkins</span> in <span class="font-semibold text-[#E23744]">Health Tech</span>
+              <span class="mx-1.5">•</span>
+              <span>July 12</span>
+              <span class="mx-1.5">•</span>
+              <span>6 min read</span>
+            </div>
+            <button onclick="toggleBookmark(1, this)" class="text-neutral-400 hover:text-brand-red transition" aria-label="Bookmark article">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+              </svg>
+            </button>
+          </div>
+        </article>
+
+        <!-- Vertical Stack 1 (Middle Column - 3 Cards: 1 Large Highlight Card at top, 2 Compact Cards at bottom) -->
+        <div class="flex flex-col justify-between h-full">
+          
+          <!-- Card 2.1 (Taller, larger image on top) -->
+          <article class="group flex flex-col justify-between relative pb-4 border-b border-neutral-100">
+            <div>
+              <div class="zoom-img-container aspect-[16/9] mb-3 rounded-lg">
+                <img src="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover zoom-img" alt="Circadian Sleep">
+              </div>
+              <h4 class="text-base font-medium text-neutral-900 group-hover:text-brand-red transition line-clamp-2 mb-1 leading-snug">
+                <a href="#" onclick="event.preventDefault();">The Science of Circadian Rhythms: Optimizing Sleep Patterns</a>
+              </h4>
+              <p class="text-[11px] text-neutral-400 line-clamp-1">Understanding melatonin production...</p>
+            </div>
+            <div class="text-[11px] text-neutral-500 mt-2">
+              <span class="font-semibold text-neutral-700">M. Sterling</span> in <span class="font-semibold text-[#E23744]">Wellness</span>
+              <span class="mx-1">•</span>
+              <span>July 10</span>
+              <span class="mx-1">•</span>
+              <span>5 min read</span>
+            </div>
+          </article>
+
+          <!-- Nested Stack for Bottom 2 Cards (Matching 3rd column's last 2 cards in alignment height) -->
+          <div class="flex flex-col gap-4 pt-2">
+            <!-- Card 2.2 -->
+            <article class="group flex gap-4 items-start relative">
+              <div class="zoom-img-container w-20 h-20 shrink-0 rounded-lg">
+                <img src="https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover zoom-img" alt="Stress Management">
+              </div>
+              <div class="flex flex-col justify-between min-h-[80px]">
+                <div>
+                  <h4 class="text-sm font-medium text-neutral-900 group-hover:text-brand-red transition line-clamp-2 mb-1 leading-snug">
+                    <a href="#" onclick="event.preventDefault();">De-escalating Stress: Vagus Nerve Stimulation</a>
+                  </h4>
+                  <p class="text-[11px] text-neutral-400 line-clamp-1">Neurological breathing protocols...</p>
+                </div>
+                <div class="text-[11px] text-neutral-500">
+                  <span class="font-semibold text-neutral-700">Claire Moreau</span> in <span class="font-semibold text-[#E23744]">Wellness</span>
+                  <div class="flex items-center gap-1 mt-0.5">
+                    <span>July 05</span>
+                    <span>•</span>
+                    <span>4 min read</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Card 2.3 -->
+            <article class="group flex gap-4 items-start relative">
+              <div class="zoom-img-container w-20 h-20 shrink-0 rounded-lg">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover zoom-img" alt="Gut Microbiome">
+              </div>
+              <div class="flex flex-col justify-between min-h-[80px]">
+                <div>
+                  <h4 class="text-sm font-medium text-neutral-900 group-hover:text-brand-red transition line-clamp-2 mb-1 leading-snug">
+                    <a href="#" onclick="event.preventDefault();">Microbiome Health: Gut Bacteria & Mood</a>
+                  </h4>
+                  <p class="text-[11px] text-neutral-400 line-clamp-1">Exploring the gut-brain axis...</p>
+                </div>
+                <div class="text-[11px] text-neutral-500">
+                  <span class="font-semibold text-neutral-700">Elena Rostov</span> in <span class="font-semibold text-[#E23744]">Nutrition</span>
+                  <div class="flex items-center gap-1 mt-0.5">
+                    <span>July 01</span>
+                    <span>•</span>
+                    <span>5 min read</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Vertical Stack 2 (Right Column - 3 Cards stacked vertically, aligned to bottom) -->
+        <div class="flex flex-col justify-between h-full">
+          <!-- Card 1 -->
+          <article class="group flex gap-4 items-start relative">
+            <div class="zoom-img-container w-20 h-20 shrink-0 rounded-lg">
+              <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover zoom-img" alt="Longevity">
+            </div>
+            <div class="flex flex-col justify-between min-h-[80px]">
+              <div>
+                <!-- Heading font weight: 500 -->
+                <h4 class="text-sm font-medium text-neutral-900 group-hover:text-brand-red transition line-clamp-2 mb-1 leading-snug">
+                  <a href="#" onclick="event.preventDefault();">Cardiologist Habits for Longevity</a>
+                </h4>
+                <p class="text-[11px] text-neutral-400 line-clamp-1">Core lifestyle alterations...</p>
+              </div>
+              <div class="text-[11px] text-neutral-500">
+                <span class="font-semibold text-neutral-700">Dr. Aaron Patel</span> in <span class="font-semibold text-[#E23744]">Medicine</span>
+                <div class="flex items-center gap-1 mt-0.5">
+                  <span>July 08</span>
+                  <span>•</span>
+                  <span>7 min read</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="group flex gap-4 items-start relative">
+            <div class="zoom-img-container w-20 h-20 shrink-0 rounded-lg">
+              <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover zoom-img" alt="Nutrition Science">
+            </div>
+            <div class="flex flex-col justify-between min-h-[80px]">
+              <div>
+                <!-- Heading font weight: 500 -->
+                <h4 class="text-sm font-medium text-neutral-900 group-hover:text-brand-red transition line-clamp-2 mb-1 leading-snug">
+                  <a href="#" onclick="event.preventDefault();">Fasting vs. Deficits: Nutrition Myths</a>
+                </h4>
+                <p class="text-[11px] text-neutral-400 line-clamp-1">Metabolic research comparative...</p>
+              </div>
+              <div class="text-[11px] text-neutral-500">
+                <span class="font-semibold text-neutral-700">Elena Rostov</span> in <span class="font-semibold text-[#E23744]">Nutrition</span>
+                <div class="flex items-center gap-1 mt-0.5">
+                  <span>July 07</span>
+                  <span>•</span>
+                  <span>5 min read</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="group flex gap-4 items-start relative">
+            <div class="zoom-img-container w-20 h-20 shrink-0 rounded-lg">
+              <img src="https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover zoom-img" alt="Biohacking Track">
+            </div>
+            <div class="flex flex-col justify-between min-h-[80px]">
+              <div>
+                <!-- Heading font weight: 500 -->
+                <h4 class="text-sm font-medium text-neutral-900 group-hover:text-brand-red transition line-clamp-2 mb-1 leading-snug">
+                  <a href="#" onclick="event.preventDefault();">Wearables & Biohacking Biomarkers</a>
+                </h4>
+                <p class="text-[11px] text-neutral-400 line-clamp-1">Continuous glucose monitoring...</p>
+              </div>
+              <div class="text-[11px] text-neutral-500">
+                <span class="font-semibold text-neutral-700">Michael Sterling</span> in <span class="font-semibold text-[#E23744]">Tech</span>
+                <div class="flex items-center gap-1 mt-0.5">
+                  <span>June 28</span>
+                  <span>•</span>
+                  <span>6 min read</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="group flex gap-4 items-start relative">
+            <div class="zoom-img-container w-20 h-20 shrink-0 rounded-lg">
+              <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=300&q=80" class="w-full h-full object-cover zoom-img" alt="Cognitive Fatigue">
+            </div>
+            <div class="flex flex-col justify-between min-h-[80px]">
+              <div>
+                <!-- Heading font weight: 500 -->
+                <h4 class="text-sm font-medium text-neutral-900 group-hover:text-brand-red transition line-clamp-2 mb-1 leading-snug">
+                  <a href="#" onclick="event.preventDefault();">Understanding Cognitive Fatigue</a>
+                </h4>
+                <p class="text-[11px] text-neutral-400 line-clamp-1">Resetting concentration levels...</p>
+              </div>
+              <div class="text-[11px] text-neutral-500">
+                <span class="font-semibold text-neutral-700">Claire Moreau</span> in <span class="font-semibold text-[#E23744]">Wellness</span>
+                <div class="flex items-center gap-1 mt-0.5">
+                  <span>June 25</span>
+                  <span>•</span>
+                  <span>5 min read</span>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Articles & Sidebar Split Section -->
+  <section id="latest-articles" class="py-20 bg-brand-bgLight/50">
+    <div class="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
+      
+      <!-- Left side (Latest Posts - 2 Columns grid) -->
+      <div class="lg:col-span-8 space-y-8">
+        <div>
+          <!-- Section title font-semibold (600) -->
+          <h2 class="text-2xl md:text-3xl font-semibold text-neutral-900 tracking-tight">Latest Research & Insights</h2>
+          
+          <!-- Category Filtering Badges -->
+          <div class="flex flex-wrap items-center gap-3 mt-6">
+            <button data-category="all" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-[#E23744] text-white transition-all">All Articles</button>
+            <button data-category="medicine" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-all">Medicine</button>
+            <button data-category="wellness" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-all">Wellness & Mental Health</button>
+            <button data-category="nutrition" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-all">Nutrition</button>
+            <button data-category="technology" class="cat-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-neutral-100 text-neutral-700 hover:bg-neutral-200 transition-all">Health Tech</button>
+          </div>
+        </div>
+
+        <div id="latest-posts-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Dynamic articles populated by app.js -->
+        </div>
+
+        <!-- Pagination Container (Premium UI) -->
+        <div id="pagination-container" class="mt-8"></div>
+      </div>
+
+      <!-- Right side (Sidebar) -->
+      <aside id="popular" class="lg:col-span-4 space-y-12">
+        
+        <!-- Popular posts list (01 to 05) -->
+        <div class="bg-white rounded-3xl p-8 border border-neutral-100 space-y-6">
+          <!-- Title font-semibold (600) -->
+          <h3 class="text-lg font-semibold text-neutral-900 pb-3 border-b border-brand-borderLight">Popular Posts</h3>
+          
+          <div class="space-y-6 pt-2">
+            <!-- 01 -->
+            <div class="flex gap-4 items-start">
+              <span class="faded-number">01</span>
+              <div>
+                <!-- Heading font-medium (500) -->
+                <a href="#" class="text-sm font-medium text-neutral-900 hover:text-brand-red transition line-clamp-2 leading-snug">The Science of Circadian Rhythms: Optimizing Sleep Patterns</a>
+                <p class="text-xs text-neutral-500 mt-1">Michael Sterling • 5 min read</p>
+              </div>
+            </div>
+
+            <!-- 02 -->
+            <div class="flex gap-4 items-start">
+              <span class="faded-number">02</span>
+              <div>
+                <!-- Heading font-medium (500) -->
+                <a href="#" class="text-sm font-medium text-neutral-900 hover:text-brand-red transition line-clamp-2 leading-snug">Cardiologist-Approved Habits for Longevity and Vitality</a>
+                <p class="text-xs text-neutral-500 mt-1">Dr. Aaron Patel • 7 min read</p>
+              </div>
+            </div>
+
+            <!-- 03 -->
+            <div class="flex gap-4 items-start">
+              <span class="faded-number">03</span>
+              <div>
+                <!-- Heading font-medium (500) -->
+                <a href="#" class="text-sm font-medium text-neutral-900 hover:text-brand-red transition line-clamp-2 leading-snug">How AI is Revolutionizing Modern Diagnostics & Clinical Care</a>
+                <p class="text-xs text-neutral-500 mt-1">Dr. Sarah Jenkins • 6 min read</p>
+              </div>
+            </div>
+
+            <!-- 04 -->
+            <div class="flex gap-4 items-start">
+              <span class="faded-number">04</span>
+              <div>
+                <!-- Heading font-medium (500) -->
+                <a href="#" class="text-sm font-medium text-neutral-900 hover:text-brand-red transition line-clamp-2 leading-snug">Nutritional Myths Debunked: Intermittent Fasting vs. Calories</a>
+                <p class="text-xs text-neutral-500 mt-1">Elena Rostov, RD • 5 min read</p>
+              </div>
+            </div>
+
+            <!-- 05 -->
+            <div class="flex gap-4 items-start">
+              <span class="faded-number">05</span>
+              <div>
+                <!-- Heading font-medium (500) -->
+                <a href="#" class="text-sm font-medium text-neutral-900 hover:text-brand-red transition line-clamp-2 leading-snug">De-escalating Chronic Stress: Vagus Nerve Stimulation</a>
+                <p class="text-xs text-neutral-500 mt-1">Claire Moreau, PsyD • 4 min read</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trending Tags Cloud -->
+        <div class="bg-white rounded-3xl p-8 border border-neutral-100">
+          <!-- Title font-semibold (600) -->
+          <h3 class="text-lg font-semibold text-neutral-900 pb-3 border-b border-brand-borderLight mb-5">Trending Tags</h3>
+          <div class="flex flex-wrap gap-2">
+            <a href="#" class="px-3.5 py-1.5 rounded-xl bg-neutral-50 hover:bg-brand-red/10 hover:text-brand-red border border-neutral-100 text-xs font-medium text-neutral-600 transition">#Longevity</a>
+            <a href="#" class="px-3.5 py-1.5 rounded-xl bg-neutral-50 hover:bg-brand-red/10 hover:text-brand-red border border-neutral-100 text-xs font-medium text-neutral-600 transition">#Biohacking</a>
+            <a href="#" class="px-3.5 py-1.5 rounded-xl bg-neutral-50 hover:bg-brand-red/10 hover:text-brand-red border border-neutral-100 text-xs font-medium text-neutral-600 transition">#MentalWellness</a>
+            <a href="#" class="px-3.5 py-1.5 rounded-xl bg-neutral-50 hover:bg-brand-red/10 hover:text-brand-red border border-neutral-100 text-xs font-medium text-neutral-600 transition">#SleepScience</a>
+            <a href="#" class="px-3.5 py-1.5 rounded-xl bg-neutral-50 hover:bg-brand-red/10 hover:text-brand-red border border-neutral-100 text-xs font-medium text-neutral-600 transition">#Cardiology</a>
+            <a href="#" class="px-3.5 py-1.5 rounded-xl bg-neutral-50 hover:bg-brand-red/10 hover:text-brand-red border border-neutral-100 text-xs font-medium text-neutral-600 transition">#GutHealth</a>
+          </div>
+        </div>
+
+        <!-- Latest News Section -->
+        <div class="bg-white rounded-3xl p-8 border border-neutral-100 space-y-5">
+          <!-- Title font-semibold (600) -->
+          <h3 class="text-lg font-semibold text-neutral-900 pb-3 border-b border-brand-borderLight">Latest News</h3>
+          <div class="space-y-4">
+            <!-- News 1 -->
+            <div class="space-y-1">
+              <span class="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-extrabold text-[#E23744]">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#E23744]"></span>
+                FDA Approval
+              </span>
+              <a href="#" onclick="event.preventDefault();" class="block text-sm font-medium text-neutral-900 hover:text-brand-red transition leading-snug">FDA Approves Revolutionary CRISPR Gene Therapy for Inherited Heart Conditions</a>
+              <span class="block text-[10px] text-neutral-400">2 hours ago</span>
+            </div>
+            
+            <!-- News 2 -->
+            <div class="space-y-1">
+              <span class="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-extrabold text-[#E23744]">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#E23744]"></span>
+                Cardiology Study
+              </span>
+              <a href="#" onclick="event.preventDefault();" class="block text-sm font-medium text-neutral-900 hover:text-brand-red transition leading-snug">New Clinical Trial Proves Zone 2 Steady-State Cardio Reverses Cellular Aging</a>
+              <span class="block text-[10px] text-neutral-400">5 hours ago</span>
+            </div>
+
+            <!-- News 3 -->
+            <div class="space-y-1">
+              <span class="inline-flex items-center gap-1.5 text-[9px] uppercase tracking-wider font-extrabold text-[#E23744]">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#E23744]"></span>
+                Neuroscience
+              </span>
+              <a href="#" onclick="event.preventDefault();" class="block text-sm font-medium text-neutral-900 hover:text-brand-red transition leading-snug">AI Biomarker Models Predict Chronic Stress and Cognitive Fatigue with 95% Accuracy</a>
+              <span class="block text-[10px] text-neutral-400">1 day ago</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sticky Newsletter card -->
+        <div id="newsletter" class="bg-gradient-to-br from-brand-dark to-neutral-900 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+          <div class="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-brand-red/20 blur-xl"></div>
+          <h3 class="text-xl font-bold mb-3">Join The Digest</h3>
+          <p class="text-neutral-400 text-sm mb-6 leading-relaxed">Weekly clinical insights and evidence-based protocols sent straight to your inbox.</p>
+          <form id="newsletter-form" class="space-y-3">
+            <input type="email" required placeholder="Enter your email address" class="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-2xl focus:outline-none focus:border-brand-red focus:bg-white/20 transition text-sm placeholder:text-neutral-500">
+            <button type="submit" class="w-full bg-brand-red hover:bg-brand-red-hover text-white font-semibold py-3 rounded-2xl transition text-sm shadow-md">
+              Subscribe Now
+            </button>
+          </form>
+        </div>
+
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- Premium Instagram Grid Section -->
+  <section class="py-16 border-t border-brand-borderLight">
+    <div class="max-w-7xl mx-auto px-6 md:px-8">
+      <div class="text-center mb-10">
+        <span class="text-xs uppercase font-bold tracking-widest text-brand-red">Follow Us @PulseHealth</span>
+        <h2 class="text-2xl font-bold text-neutral-900 mt-1">Inside the Pulse Community</h2>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div class="aspect-square rounded-3xl overflow-hidden shadow-sm hover:opacity-90 transition">
+          <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover" alt="Yoga mindfulness">
+        </div>
+        <div class="aspect-square rounded-3xl overflow-hidden shadow-sm hover:opacity-90 transition">
+          <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover" alt="Healthy nutrition preparation">
+        </div>
+        <div class="aspect-square rounded-3xl overflow-hidden shadow-sm hover:opacity-90 transition">
+          <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover" alt="Cardiology analytics screening">
+        </div>
+        <div class="aspect-square rounded-3xl overflow-hidden shadow-sm hover:opacity-90 transition">
+            
+          <img src="https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover" alt="Clinical longevity lab research">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-neutral-950 text-neutral-400 py-16">
+    <div class="max-w-7xl mx-auto px-6 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div class="space-y-4">
+        <span class="text-white text-2xl font-extrabold tracking-tight">Pulse<span class="text-brand-red">.</span></span>
+        <p class="text-xs leading-relaxed max-w-xs text-neutral-500">Premium editorial blog dedicated to clinical wellness, longevity biology, cardio habits, and health-tech trends.</p>
+      </div>
+      <div>
+        <h4 class="text-white text-sm font-semibold mb-4">Categories</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="#" class="hover:text-white transition">Longevity Medicine</a></li>
+          <li><a href="#" class="hover:text-white transition">Cardiovascular Health</a></li>
+          <li><a href="#" class="hover:text-white transition">Mental Diagnostics</a></li>
+          <li><a href="#" class="hover:text-white transition">Nutrition Science</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white text-sm font-semibold mb-4">Company</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="#" class="hover:text-white transition">About Pulse</a></li>
+          <li><a href="#" class="hover:text-white transition">Editorial Board</a></li>
+          <li><a href="#" class="hover:text-white transition">Scientific Advisory</a></li>
+          <li><a href="#" class="hover:text-white transition">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white text-sm font-semibold mb-4">Legal</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-white transition">Medical Disclaimer</a></li>
+          <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 md:px-8 border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-neutral-600 gap-4">
+      <p>&copy; 2026 Pulse. All rights reserved. Content provided is for informational/educational purposes only and does not constitute medical advice.</p>
+      <div class="flex gap-4">
+        <a href="#" class="hover:text-neutral-400">Twitter</a>
+        <a href="#" class="hover:text-neutral-400">LinkedIn</a>
+        <a href="#" class="hover:text-neutral-400">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core Javascript File -->
+  <script src="js/app.js"></script>
+</body>
+</html>
