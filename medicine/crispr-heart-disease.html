@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Next Frontier: CRISPR Therapy for Inherited Heart Disease - Pulse Health</title>
+  <meta name="description" content="Clinical trials begin for gene editing cures addressing hypertrophic cardiomyopathy, offering hope to millions worldwide.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Lexend', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              red: '#E23744',
+              'red-hover': '#FF4F5A',
+              dark: '#1C1C1C',
+              muted: '#6B6B6B',
+              bgLight: '#FAFAFA',
+              borderLight: '#EEEEEE'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-white" data-article-id="6">
+
+  <!-- Reading Progress Bar -->
+  <div id="reading-progress" class="bg-[#E23744] h-1 fixed top-0 left-0 transition-all duration-75 z-[100] w-0"></div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
+
+  <!-- Search Dialog -->
+  <dialog id="search-dialog" class="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl shadow-2xl border border-neutral-100 focus:outline-none">
+    <div class="flex items-center justify-between pb-4 border-b border-neutral-100 mb-6">
+      <h3 class="text-xl font-bold text-neutral-900">Search Articles</h3>
+      <button id="close-search-btn" class="text-neutral-400 hover:text-brand-red transition">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="relative mb-6">
+      <input type="text" id="search-input" placeholder="Type key diagnostics, cardiology, wellness..." class="w-full pl-12 pr-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl focus:outline-none focus:border-brand-red transition text-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 absolute left-4 top-4 text-neutral-400">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+      </svg>
+    </div>
+    <div id="search-results-list" class="max-h-60 overflow-y-auto space-y-2 pr-2">
+      <!-- Search results generated dynamically -->
+    </div>
+  </dialog>
+
+  <!-- Header -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-40 glass-header py-5">
+    <div class="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="../index.html" class="text-2xl md:text-3xl font-extrabold tracking-tight text-neutral-900 flex items-center gap-1 group">
+        Pulse<span class="text-brand-red group-hover:scale-125 transition-transform duration-300">.</span>
+      </a>
+
+      <!-- Right Side Container (Nav Links + Search) -->
+      <div class="flex items-center gap-8">
+        <!-- Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-neutral-600">
+          <a href="../index.html" class="hover:text-brand-red transition">Home</a>
+          <a href="../index.html#editors-picks" class="hover:text-brand-red transition">Editor's Picks</a>
+          <a href="../index.html#latest-articles" class="hover:text-brand-red transition">Articles</a>
+          <a href="../bookmarks.html" class="hover:text-brand-red transition">Bookmarks</a>
+        </nav>
+
+        <!-- Inline Search Textbox -->
+        <div class="relative hidden md:block w-48 lg:w-60">
+          <input type="text" id="header-search-input" placeholder="Search articles..." class="w-full pl-10 pr-4 py-2 bg-neutral-100 hover:bg-neutral-200/50 focus:bg-white border border-transparent focus:border-brand-red/30 rounded-full text-xs transition duration-200 focus:outline-none placeholder:text-neutral-500 text-neutral-800">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 absolute left-3.5 top-2.5 text-neutral-400">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+          </svg>
+        </div>
+
+        <!-- Mobile Search Button -->
+        <button id="search-trigger-btn" class="md:hidden p-2.5 rounded-full hover:bg-neutral-100 text-neutral-600 hover:text-brand-red transition" aria-label="Search posts">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Article View Container -->
+  <main class="pt-32 pb-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6 md:px-8">
+      
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs text-neutral-400 font-semibold mb-8" aria-label="Breadcrumb">
+        <a href="../index.html" class="hover:text-brand-red transition">Home</a>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3 text-neutral-300">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+        <a href="index.html" class="hover:text-brand-red transition">Medicine</a>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3 h-3 text-neutral-300">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+        <span class="text-neutral-600 truncate">CRISPR Therapy</span>
+      </nav>
+
+      <!-- Article Header -->
+      <header class="max-w-4xl mb-12">
+        <span class="inline-block bg-[#E23744]/10 text-brand-red text-xs uppercase tracking-wider font-extrabold px-3.5 py-1.5 rounded-full mb-4">Medicine & Clinical Research</span>
+        <h1 class="text-3xl md:text-5xl lg:text-6xl font-semibold text-neutral-900 leading-[1.15] tracking-tight mb-6">The Next Frontier: CRISPR Therapy for Inherited Heart Disease</h1>
+        
+        <div class="flex flex-wrap items-center justify-between gap-6 border-t border-b border-neutral-100 py-6">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full bg-brand-red/10 text-brand-red flex items-center justify-center font-bold text-lg uppercase">S</div>
+            <div>
+              <p class="text-sm font-semibold text-neutral-900">Dr. Sarah Jenkins</p>
+              <p class="text-xs text-neutral-400">Chief of Genomic Cardiology, Pulse Institute</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4 text-xs text-neutral-500">
+            <span>July 03, 2026</span>
+            <span>•</span>
+            <span>8 min read</span>
+            <button id="bookmark-article-btn" class="p-2 border border-neutral-200 rounded-full hover:border-brand-red hover:text-brand-red transition duration-200" aria-label="Bookmark article">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Featured Image -->
+      <div class="zoom-img-container aspect-[21/9] rounded-[32px] mb-12 shadow-sm">
+        <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover" alt="CRISPR gene editing research">
+      </div>
+
+      <!-- Content Split Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <!-- Left Side: Article Body Content (2/3 width) -->
+        <article class="lg:col-span-8 space-y-6 text-neutral-700 leading-relaxed text-base md:text-lg">
+          <p>Gene editing technology is rapidly moving from theoretical laboratory pipelines to actual in-vivo clinical applications. Hypertrophic cardiomyopathy, a genetic heart condition causing muscle thickening and sudden cardiac arrest in young athletes, is now the focus of a revolutionary CRISPR-Cas9 clinical trial phase.</p>
+          
+          <h2 class="text-xl md:text-2xl font-semibold text-neutral-900 pt-4">Direct Genetic Correction In Vivo</h2>
+          <p>Unlike previous therapies that focus on suppressing symptoms, CRISPR therapy targets the exact mutations in the MYBPC3 gene responsible for structural myocardial failures. By packing molecular scissors into lipid nanoparticles, surgeons can administer a single intravenous dose targeted directly to cardiac muscle cells.</p>
+
+          <blockquote class="border-l-4 border-brand-red pl-6 py-2 my-8 italic text-neutral-800 text-lg md:text-xl font-medium">
+            "We are no longer looking at lifelong prescription reliance. If successful, CRISPR therapy will permanently cure genetic mutations within myocardial cells, restoring normal structural outputs."
+          </blockquote>
+
+          <h2 class="text-xl md:text-2xl font-semibold text-neutral-900 pt-4">Clinical Trials & Hypertrophy Outcomes</h2>
+          <p>Initial test results from early phase cohorts have reported successful editing rates without off-target sequence disruptions. Scientists monitor the following metrics:</p>
+          <ul class="list-disc pl-6 space-y-3">
+            <li><strong>Myocardial Wall Thickness:</strong> Measured via MRI scans to track tissue normalization rates.</li>
+            <li><strong>Action Potential Velocity:</strong> Electro-physiology monitoring to ensure editing doesn't disrupt cardiac rhythms.</li>
+            <li><strong>Autonomic Recovery:</strong> Assessing long-term stress adjustments during exercise stress tests.</li>
+          </ul>
+
+          <p>While long-term observations are required to confirm zero side effects, the therapeutic potential of correcting inherited heart defects pre-symptomatically is the most exciting milestone in modern genomics.</p>
+        </article>
+
+        <!-- Right Side: Sidebar (1/3 width) -->
+        <aside class="lg:col-span-4 space-y-8 lg:sticky lg:top-28">
+          
+          <!-- Sharing Tools Card -->
+          <div class="bg-neutral-50 rounded-3xl p-6 border border-neutral-100 space-y-4">
+            <h4 class="text-xs uppercase font-extrabold tracking-widest text-[#E23744]">Share This Article</h4>
+            <div class="flex items-center gap-3">
+              <button id="share-copy-link-btn" class="flex items-center justify-center gap-2 w-full py-2.5 bg-white border border-neutral-200 hover:border-brand-red text-xs font-semibold text-neutral-700 hover:text-brand-red rounded-xl transition duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                </svg>
+                Copy Link
+              </button>
+            </div>
+          </div>
+
+          <!-- Sticky Newsletter card -->
+          <div id="newsletter" class="bg-gradient-to-br from-brand-dark to-neutral-900 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-brand-red/20 blur-xl"></div>
+            <h3 class="text-xl font-bold mb-3">Join The Digest</h3>
+            <p class="text-neutral-400 text-sm mb-6 leading-relaxed">Weekly clinical insights and evidence-based protocols sent straight to your inbox.</p>
+            <form id="newsletter-form" class="space-y-3">
+              <input type="email" required placeholder="Enter your email address" class="w-full px-4 py-3 bg-white/10 border border-white/10 rounded-2xl focus:outline-none focus:border-brand-red focus:bg-white/20 transition text-sm placeholder:text-neutral-500">
+              <button type="submit" class="w-full bg-brand-red hover:bg-brand-red-hover text-white font-semibold py-3 rounded-2xl transition text-sm shadow-md">
+                Subscribe Now
+              </button>
+            </form>
+          </div>
+
+        </aside>
+
+      </div>
+
+      <!-- Related Reads section -->
+      <section class="border-t border-neutral-100 mt-20 pt-16">
+        <h3 class="text-2xl font-semibold text-neutral-900 mb-8">Related Reads</h3>
+        <div id="related-articles-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Dynamically generated reads -->
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-brand-dark text-neutral-400 py-16 border-t border-neutral-800">
+    <div class="max-w-7xl mx-auto px-6 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="text-sm font-semibold">
+        &copy; 2026 Pulse Health Editorial. All rights reserved.
+      </div>
+      <div class="flex items-center gap-6 text-xs font-semibold">
+        <a href="../index.html" class="hover:text-white transition">Home</a>
+        <a href="../bookmarks.html" class="hover:text-white transition">Bookmarks</a>
+        <a href="#" onclick="event.preventDefault();" class="hover:text-white transition">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/db.js"></script>
+  <script src="../js/article.js"></script>
+</body>
+</html>

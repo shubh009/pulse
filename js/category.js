@@ -1,17 +1,45 @@
-// Premium Editorial Healthcare Blog - Core JavaScript Interactivity
-
+// Premium Editorial Healthcare Blog - Category Pages Controller
 const ARTICLES = window.ARTICLES || [];
 
 // Initialize State
 let bookmarkedIds = JSON.parse(localStorage.getItem('pulse_bookmarks')) || [];
-let activeCategoryFilter = 'all';
 let currentPage = 1;
 const ITEMS_PER_PAGE = 6;
+
+// Detect Category from directory structure
+// E.g. path ".../pushpanjali-blogs/wellness/index.html" -> wellness
+const pathParts = window.location.pathname.split('/');
+// Handle trailing slashes or index.html names
+let categoryKey = "";
+if (pathParts[pathParts.length - 1] === "index.html" || pathParts[pathParts.length - 1] === "") {
+  categoryKey = pathParts[pathParts.length - 2];
+} else {
+  categoryKey = pathParts[pathParts.length - 1];
+}
+
+const CATEGORY_META = {
+  medicine: {
+    title: "Medicine & Clinical Research",
+    desc: "Evidence-based medical updates, breakthroughs in cardiology, gene editing trials, and preventative healthcare guidelines."
+  },
+  wellness: {
+    title: "Wellness & Sleep Science",
+    desc: "Chronobiology protocols, vagus nerve stimulation, stress resilience, and evidence-based mental health practices."
+  },
+  nutrition: {
+    title: "Nutrition & Metabolic Health",
+    desc: "Scientific updates on dietary patterns, calorie management, glucose biohacking, and gut microbiome optimization."
+  },
+  technology: {
+    title: "Health Tech & Digital Diagnostics",
+    desc: "AI innovations in clinical settings, medical diagnostics, mobile wearables integration, and remote patient monitoring."
+  }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   initNavbarScroll();
   initSearchDialog();
-  initCategoryFilters();
+  setupCategoryHeader();
   renderArticles();
   initNewsletterForm();
 });
@@ -28,46 +56,35 @@ function initNavbarScroll() {
   });
 }
 
-// 2. Dialog search management
+// 2. Search Dialog
 function initSearchDialog() {
-  const searchBtn = document.getElementById('search-trigger-btn');
-  const headerSearchInput = document.getElementById('header-search-input');
-  const searchDialog = document.getElementById('search-dialog');
-  const closeDialogBtn = document.getElementById('close-search-btn');
   const searchInput = document.getElementById('search-input');
-  
-  if (searchDialog) {
-    if (searchBtn) {
-      searchBtn.addEventListener('click', () => {
-        searchDialog.showModal();
-        setTimeout(() => searchInput.focus(), 100);
-      });
-    }
+  const closeDialogBtn = document.getElementById('close-search-btn');
+  const searchDialog = document.getElementById('search-dialog');
+  const headerSearchInput = document.getElementById('header-search-input');
 
-    if (headerSearchInput) {
-      headerSearchInput.addEventListener('click', () => {
-        const val = headerSearchInput.value;
-        searchDialog.showModal();
-        searchInput.value = val;
-        searchInput.dispatchEvent(new Event('input'));
-        headerSearchInput.value = '';
-        headerSearchInput.blur();
-        setTimeout(() => searchInput.focus(), 100);
-      });
-    }
-    
+  if (headerSearchInput && searchDialog) {
+    headerSearchInput.addEventListener('click', () => {
+      searchDialog.showModal();
+      setTimeout(() => searchInput.focus(), 100);
+    });
+  }
+
+  if (closeDialogBtn && searchDialog) {
     closeDialogBtn.addEventListener('click', () => {
       searchDialog.close();
     });
-    
-    // Close on backdrop click
+  }
+
+  if (searchDialog) {
     searchDialog.addEventListener('click', (e) => {
       if (e.target === searchDialog) {
         searchDialog.close();
       }
     });
+  }
 
-    // Real-time search inside the dialog
+  if (searchInput) {
     searchInput.addEventListener('input', (e) => {
       const query = e.target.value.toLowerCase().trim();
       const resultsContainer = document.getElementById('search-results-list');
@@ -89,7 +106,7 @@ function initSearchDialog() {
       }
 
       resultsContainer.innerHTML = filtered.map(art => `
-        <a href="${art.category}/${art.slug}.html" class="block p-3 rounded-xl hover:bg-neutral-50 transition border border-transparent hover:border-neutral-100 group">
+        <a href="../${art.category}/${art.slug}.html" class="block p-3 rounded-xl hover:bg-neutral-50 transition border border-transparent hover:border-neutral-100 group">
           <div class="flex items-center gap-3">
             <img src="${art.image}" class="w-12 h-12 rounded-lg object-cover" alt="">
             <div>
@@ -104,37 +121,26 @@ function initSearchDialog() {
   }
 }
 
-// 3. Category Filter buttons logic (SEO Directives: redirect to category landing pages)
-function initCategoryFilters() {
-  const buttons = document.querySelectorAll('.cat-filter-btn');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const cat = btn.dataset.category;
-      if (cat === 'all') {
-        activeCategoryFilter = 'all';
-        currentPage = 1;
-        buttons.forEach(b => b.classList.remove('bg-[#E23744]', 'text-white'));
-        buttons.forEach(b => b.classList.add('bg-neutral-100', 'text-neutral-700', 'hover:bg-neutral-200'));
-        btn.classList.remove('bg-neutral-100', 'text-neutral-700', 'hover:bg-neutral-200');
-        btn.classList.add('bg-[#E23744]', 'text-white');
-        renderArticles();
-      } else {
-        window.location.href = `${cat}/index.html`;
-      }
-    });
-  });
+// 3. Set page titles based on detected category
+function setupCategoryHeader() {
+  const meta = CATEGORY_META[categoryKey];
+  if (!meta) return;
+
+  const titleEl = document.getElementById('category-page-title');
+  const descEl = document.getElementById('category-page-desc');
+  const breadcrumbEl = document.getElementById('category-breadcrumb-current');
+
+  if (titleEl) titleEl.textContent = meta.title;
+  if (descEl) descEl.textContent = meta.desc;
+  if (breadcrumbEl) breadcrumbEl.textContent = categoryKey.charAt(0).toUpperCase() + categoryKey.slice(1);
 }
 
-// 4. Render articles dynamically with Pagination (6 items per page)
+// 4. Render category articles with Pagination
 function renderArticles() {
   const latestGrid = document.getElementById('latest-posts-grid');
   if (!latestGrid) return;
 
-  // Filter latest articles
-  const filtered = ARTICLES.filter(art => {
-    if (activeCategoryFilter === 'all') return true;
-    return art.category === activeCategoryFilter;
-  });
+  const filtered = ARTICLES.filter(art => art.category === categoryKey);
 
   if (filtered.length === 0) {
     latestGrid.innerHTML = `
@@ -146,7 +152,6 @@ function renderArticles() {
     return;
   }
 
-  // Slice list to display 6 articles per page
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedArticles = filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
@@ -170,7 +175,7 @@ function renderArticles() {
           </div>
           
           <h3 class="text-xl md:text-2xl font-medium text-neutral-900 group-hover:text-[#E23744] transition-colors line-clamp-2 mb-3">
-            <a href="${art.category}/${art.slug}.html">${art.title}</a>
+            <a href="${art.slug}.html">${art.title}</a>
           </h3>
           
           <p class="text-neutral-500 text-sm leading-relaxed mb-6 line-clamp-3">${art.excerpt}</p>
@@ -192,7 +197,7 @@ function renderArticles() {
   renderPagination(filtered.length);
 }
 
-// 4.1. Render Premium Pagination Controls
+// 4.1. Pagination Rendering
 function renderPagination(totalItems) {
   const container = document.getElementById('pagination-container');
   if (!container) return;
@@ -245,13 +250,12 @@ function renderPagination(totalItems) {
   container.innerHTML = html;
 }
 
-// 4.2. Helper to switch pages
+// Helper to switch pages
 window.changePage = function(pageNumber) {
   currentPage = pageNumber;
   renderArticles();
   
-  // Smooth scroll back to top of latest articles section
-  const section = document.getElementById('latest-articles');
+  const section = document.getElementById('category-landing-content');
   if (section) {
     window.scrollTo({
       top: section.offsetTop - 100,
@@ -296,20 +300,17 @@ function showNotification(message) {
   
   container.appendChild(toast);
   
-  // Animation intro
   setTimeout(() => {
     toast.classList.remove('translate-y-4', 'opacity-0');
   }, 10);
 
-  // Remove toast
   setTimeout(() => {
     toast.classList.add('translate-y-4', 'opacity-0');
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
 
-
-// 8. Newsletter custom interaction with user-valid state
+// 7. Newsletter custom interaction
 function initNewsletterForm() {
   const form = document.getElementById('newsletter-form');
   if (form) {

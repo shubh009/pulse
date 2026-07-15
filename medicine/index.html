@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine & Clinical Research - Pulse Health</title>
+  <meta name="description" content="Evidence-based medical updates, breakthroughs in cardiology, gene editing trials, and preventative healthcare guidelines.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Lexend', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              red: '#E23744',
+              'red-hover': '#FF4F5A',
+              dark: '#1C1C1C',
+              muted: '#6B6B6B',
+              bgLight: '#FAFAFA',
+              borderLight: '#EEEEEE'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-white">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
+
+  <!-- Search Dialog -->
+  <dialog id="search-dialog" class="w-full max-w-2xl bg-white p-6 md:p-8 rounded-3xl shadow-2xl border border-neutral-100 focus:outline-none">
+    <div class="flex items-center justify-between pb-4 border-b border-neutral-100 mb-6">
+      <h3 class="text-xl font-bold text-neutral-900">Search Articles</h3>
+      <button id="close-search-btn" class="text-neutral-400 hover:text-brand-red transition">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="relative mb-6">
+      <input type="text" id="search-input" placeholder="Type key diagnostics, cardiology, wellness..." class="w-full pl-12 pr-4 py-3.5 bg-neutral-50 border border-neutral-200 rounded-2xl focus:outline-none focus:border-brand-red transition text-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 absolute left-4 top-4 text-neutral-400">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+      </svg>
+    </div>
+    <div id="search-results-list" class="max-h-60 overflow-y-auto space-y-2 pr-2">
+      <!-- Search results generated dynamically -->
+    </div>
+  </dialog>
+
+  <!-- Header -->
+  <header id="main-header" class="fixed top-0 left-0 right-0 z-40 glass-header py-5">
+    <div class="max-w-7xl mx-auto px-6 md:px-8 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="../index.html" class="text-2xl md:text-3xl font-extrabold tracking-tight text-neutral-900 flex items-center gap-1 group">
+        Pulse<span class="text-brand-red group-hover:scale-125 transition-transform duration-300">.</span>
+      </a>
+
+      <!-- Right Side Container (Nav Links + Search) -->
+      <div class="flex items-center gap-8">
+        <!-- Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-neutral-600">
+          <a href="../index.html" class="hover:text-brand-red transition">Home</a>
+          <a href="../index.html#editors-picks" class="hover:text-brand-red transition">Editor's Picks</a>
+          <a href="../index.html#latest-articles" class="hover:text-brand-red transition">Articles</a>
+          <a href="../bookmarks.html" class="hover:text-brand-red transition">Bookmarks</a>
+        </nav>
+
+        <!-- Inline Search Textbox -->
+        <div class="relative hidden md:block w-48 lg:w-60">
+          <input type="text" id="header-search-input" placeholder="Search articles..." class="w-full pl-10 pr-4 py-2 bg-neutral-100 hover:bg-neutral-200/50 focus:bg-white border border-transparent focus:border-brand-red/30 rounded-full text-xs transition duration-200 focus:outline-none placeholder:text-neutral-500 text-neutral-800">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 absolute left-3.5 top-2.5 text-neutral-400">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+          </svg>
+        </div>
+
+        <!-- Mobile Search Button -->
+        <button id="search-trigger-btn" class="md:hidden p-2.5 rounded-full hover:bg-neutral-100 text-neutral-600 hover:text-brand-red transition" aria-label="Search posts">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.602 10.602z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Category Landing Content -->
+  <main id="category-landing-content" class="pt-32 pb-24 bg-brand-bgLight/40 min-h-screen">
+    <div class="max-w-7xl mx-auto px-6 md:px-8">
+      
+      <!-- Breadcrumb -->
+      <nav class="flex items-center gap-2 text-xs text-neutral-400 font-semibold mb-6" aria-label="Breadcrumb">
+        <a href="../index.html" class="hover:text-brand-red transition">Home</a>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5 text-neutral-300">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+        <span class="text-neutral-600" id="category-breadcrumb-current">Medicine</span>
+      </nav>
+
+      <!-- Category Intro Header (Premium Showcase) -->
+      <div class="relative bg-gradient-to-r from-neutral-50 to-neutral-100/30 rounded-[32px] p-8 md:p-12 border border-neutral-100 mb-16 overflow-hidden">
+        <div class="absolute -right-16 -top-16 w-60 h-60 rounded-full bg-brand-red/5 blur-3xl"></div>
+        <div class="max-w-3xl relative z-10">
+          <h1 class="text-4xl md:text-5xl font-semibold text-neutral-900 tracking-tight mb-4" id="category-page-title">Medicine & Clinical Research</h1>
+          <p class="text-neutral-500 text-base md:text-lg leading-relaxed" id="category-page-desc">Evidence-based medical updates, breakthroughs in cardiology, gene editing trials, and preventative healthcare guidelines.</p>
+        </div>
+      </div>
+
+      <!-- Articles Grid -->
+      <div id="latest-posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Dynamic articles loaded via category.js -->
+      </div>
+
+      <!-- Pagination Container -->
+      <div id="pagination-container" class="mt-8"></div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-brand-dark text-neutral-400 py-16 border-t border-neutral-800">
+    <div class="max-w-7xl mx-auto px-6 md:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="text-sm font-semibold">
+        &copy; 2026 Pulse Health Editorial. All rights reserved.
+      </div>
+      <div class="flex items-center gap-6 text-xs font-semibold">
+        <a href="../index.html" class="hover:text-white transition">Home</a>
+        <a href="../bookmarks.html" class="hover:text-white transition">Bookmarks</a>
+        <a href="#" onclick="event.preventDefault();" class="hover:text-white transition">Privacy Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/db.js"></script>
+  <script src="../js/category.js"></script>
+</body>
+</html>

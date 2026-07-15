@@ -123,3 +123,47 @@ dialog[open] {
   background-color: var(--color-primary);
   color: #FFFFFF;
 }
+
+/* Typography customizations for inner pages */
+main h1,
+#category-page-title {
+  font-size: 3rem !important;
+  line-height: 1.15 !important;
+}
+
+main article.lg\:col-span-8,
+main article.lg\:col-span-8 p,
+main article.lg\:col-span-8 li {
+  font-size: 16px !important;
+}
+
+/* Premium Dropcap for Editorial Feel */
+.dropcap::first-letter {
+  font-size: 4.2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  float: left;
+  line-height: 0.85;
+  margin-right: 8px;
+  margin-top: 4px;
+}
+
+/* Executive Summary Box */
+.takeaways-box {
+  background: linear-gradient(135deg, rgba(226, 55, 68, 0.03) 0%, rgba(226, 55, 68, 0.01) 100%);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+/* Table of Contents Hover states */
+.toc-link {
+  transition: all 0.2s ease;
+}
+.toc-link:hover {
+  color: var(--color-primary);
+  padding-left: 4px;
+}
+
+
+
